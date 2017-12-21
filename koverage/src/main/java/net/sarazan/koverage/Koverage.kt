@@ -1,5 +1,9 @@
 package net.sarazan.koverage
 
+import net.sarazan.koverage.testers.ConstructorTester
+import net.sarazan.koverage.testers.DataTester
+import net.sarazan.koverage.testers.EnumTester
+import net.sarazan.koverage.testers.PropertyTester
 import kotlin.reflect.KClass
 
 /**
@@ -10,7 +14,8 @@ object Koverage {
     val testers = listOf(
             ConstructorTester,
             PropertyTester,
-            DataTester
+            DataTester,
+            EnumTester
     )
 
     fun <T : Any> cover(klass: KClass<T>) {

@@ -1,5 +1,6 @@
 package net.sarazan.koverage
 
+import net.sarazan.koverage.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.declaredMemberProperties

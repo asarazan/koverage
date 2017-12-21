@@ -10,6 +10,15 @@ class KoverageTests {
     @Test
     fun testProperties() {
         Koverage.cover<BasicProperties>()
+    }
+
+    @Test
+    fun testData() {
         Koverage.cover<SomeDataClass>()
+    }
+
+    @Test
+    fun testEnum() {
+        Koverage.cover<SomeEnum>()
     }
 }

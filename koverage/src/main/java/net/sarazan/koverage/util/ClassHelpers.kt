@@ -1,4 +1,4 @@
-package net.sarazan.koverage
+package net.sarazan.koverage.util
 
 import org.mockito.Mockito
 import sun.misc.Unsafe
@@ -8,11 +8,23 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 /**
  * Created by Aaron Sarazan on 12/15/17
  */
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Any> KClass<T>.coverableInstances(): List<T> {
+    return if (objectInstance != null) {
+        listOf(objectInstance!!)
+    } else if (java.isEnum) {
+        java.enumConstants.toList()
+    } else {
+        listOf(allocateUnsafe())
+    }
+}
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> KClass<T>.allocateUnsafe(): T {
@@ -96,4 +108,13 @@ val <T : Any> KClass<T>.dataProperties: List<KProperty1<T, *>>
             param ->
             declaredMemberProperties.find { it.name == param.name }!!
         }
+    }
+
+val <T : Any> KClass<T>.coverableProperties: List<KProperty1<T, *>>
+    get() {
+        return if (java.isEnum) {
+            declaredMemberProperties
+        } else {
+            memberProperties
+        }.toList()
     }
