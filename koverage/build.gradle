@@ -16,8 +16,9 @@ targetCompatibility = "1.7"
 version = '1.0'
 group = 'net.sarazan'
 
-def bintrayUser = getProperty("bintray.user")
-def bintrayKey = getProperty("bintray.apiKey")
+
+def bintrayUser = findProperty("bintray.user")
+def bintrayKey = findProperty("bintray.apiKey")
 if (bintrayUser != null && bintrayKey != null) {
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
