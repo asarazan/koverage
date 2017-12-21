@@ -16,83 +16,87 @@ targetCompatibility = "1.7"
 version = '1.0'
 group = 'net.sarazan'
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+def bintrayUser = getProperty("bintray.user")
+def bintrayKey = getProperty("bintray.apiKey")
+if (bintrayUser != null && bintrayKey != null) {
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
 
-artifacts {
-    archives sourcesJar, javadocJar
-}
+    artifacts {
+        archives sourcesJar, javadocJar
+    }
 
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
+    def pomConfig = {
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+        developers {
+            developer {
+                id "asarazan"
+                name "Aaron Sarazan"
+                email "aaron@sarazan.net"
+            }
+        }
+
+        scm {
+            url "https://github.com/asarazan/koverage"
         }
     }
-    developers {
-        developer {
-            id "asarazan"
-            name "Aaron Sarazan"
-            email "aaron@sarazan.net"
-        }
-    }
-
-    scm {
-        url "https://github.com/asarazan/koverage"
-    }
-}
 
 // Create the publication with the pom configuration:
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-            groupId group
-            artifactId 'koverage'
-            version version
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', '100% code coverage for Kotlin data classes')
-                root.appendNode('name', 'Koverage')
-                root.appendNode('url', 'https://github.com/asarazan/koverage')
-                root.children().last() + pomConfig
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                groupId group
+                artifactId 'koverage'
+                version version
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('description', '100% code coverage for Kotlin data classes')
+                    root.appendNode('name', 'Koverage')
+                    root.appendNode('url', 'https://github.com/asarazan/koverage')
+                    root.children().last() + pomConfig
+                }
             }
         }
     }
-}
 
-bintray {
-    user = getProperty('bintray.user')
-    key = getProperty('bintray.apikey')
-    publications = ['mavenJava']
+    bintray {
+        user = bintrayUser
+        key = bintrayKey
+        publications = ['mavenJava']
 
-    dryRun = false
-    publish = true
-    override = false
+        dryRun = false
+        publish = true
+        override = false
 
-    pkg {
-        repo = 'maven'
-        name = 'koverage'
-        desc = '100% code coverage for Kotlin data classes'
-        websiteUrl = 'https://github.com/asarazan/koverage'
-        issueTrackerUrl = 'https://github.com/asarazan/koverage/issues'
-        vcsUrl = 'https://github.com/asarazan/koverage.git'
-        licenses = ['Apache-2.0']
-        labels = ['kotlin', 'android', 'jacoco', 'coverage', 'testing']
-        publicDownloadNumbers = true
+        pkg {
+            repo = 'maven'
+            name = 'koverage'
+            desc = '100% code coverage for Kotlin data classes'
+            websiteUrl = 'https://github.com/asarazan/koverage'
+            issueTrackerUrl = 'https://github.com/asarazan/koverage/issues'
+            vcsUrl = 'https://github.com/asarazan/koverage.git'
+            licenses = ['Apache-2.0']
+            labels = ['kotlin', 'android', 'jacoco', 'coverage', 'testing']
+            publicDownloadNumbers = true
 
-        githubRepo = 'asarazan/koverage' //Optional Github repository
-        githubReleaseNotesFile = 'README.md' //Optional Github readme file
+            githubRepo = 'asarazan/koverage' //Optional Github repository
+            githubReleaseNotesFile = 'README.md' //Optional Github readme file
+        }
     }
 }
