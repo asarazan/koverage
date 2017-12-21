@@ -1,6 +1,7 @@
 package net.sarazan.koverage
 
 import org.mockito.Mockito
+import sun.misc.Unsafe
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -13,10 +14,21 @@ import kotlin.reflect.full.primaryConstructor
  * Created by Aaron Sarazan on 12/15/17
  */
 
+@Suppress("UNCHECKED_CAST")
+fun <T : Any> KClass<T>.allocateUnsafe(): T {
+    val unsafeField = Unsafe::class.java.getDeclaredField("theUnsafe")
+    unsafeField.isAccessible = true
+    val unsafe = unsafeField.get(null) as Unsafe
+    return unsafe.allocateInstance(this.java) as T
+}
+
+fun <T : Any> KFunction<T>.invokeDefault(): T {
+    val params = parameters.map { it.kclass().default() }
+    return call(*params.toTypedArray())
+}
+
 fun <T : Any> KClass<T>.constructDefault(): T {
-    val ctor = primaryConstructor!!
-    val params = ctor.parameters.map { it.kclass().default() }
-    return ctor.call(*params.toTypedArray())
+    return primaryConstructor!!.invokeDefault()
 }
 
 @Suppress("UNCHECKED_CAST")

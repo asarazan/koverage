@@ -6,41 +6,22 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
 
 /**
- * Created by Aaron Sarazan on 12/15/17
+ * Created by Aaron Sarazan on 12/21/17
  */
-@Deprecated("Use Koverage class instead.")
-class DataClasses<T : Any> private constructor(private val data: T) {
+class DataTester<T: Any> private constructor(private val data: T) {
 
-    companion object {
-
-        private fun <T : Any> create(cls: KClass<T>): T {
-            return cls.constructDefault()
-        }
-
-        inline fun <reified T : Any> cover() {
-            cover(T::class)
-        }
-
-        fun <T : Any> cover(cls: KClass<T>) {
-            cover(create(cls))
-        }
-
-        fun <T : Any> cover(obj: T) {
-            DataClasses(obj).cover()
+    companion object : Coverable {
+        override fun <T : Any> cover(klass: KClass<T>) {
+            if (klass.isData) {
+                DataTester(klass.constructDefault()).cover()
+            }
         }
     }
 
     private val klass = data.javaClass.kotlin
 
-    init {
-        if (!klass.isData) {
-            throw IllegalArgumentException("${klass.simpleName} is not a data class.")
-        }
-    }
-
     fun cover() {
         coverComponents()
-        coverProperties()
         coverCopy()
         coverHash()
         coverEquals()
@@ -51,12 +32,6 @@ class DataClasses<T : Any> private constructor(private val data: T) {
         klass.declaredMemberFunctions
                 .filter { it.name.startsWith("component") }
                 .forEach { it.call(data) }
-    }
-
-    private fun coverProperties() {
-        klass.dataProperties.forEach {
-            it.get(data)
-        }
     }
 
     private fun coverCopy() {
