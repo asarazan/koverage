@@ -1,4 +1,4 @@
-# koverage
+# koverage [![Build Status](https://travis-ci.org/asarazan/koverage.svg?branch=master)](https://travis-ci.org/asarazan/koverage)
 100% code coverage for Kotlin data classes
 
 ### Get
