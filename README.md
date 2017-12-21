@@ -1,5 +1,7 @@
 # koverage [![Build Status](https://travis-ci.org/asarazan/koverage.svg?branch=master)](https://travis-ci.org/asarazan/koverage)
-100% code coverage for Kotlin data classes
+100% code coverage for Kotlin data classes and other generated kotlin code.
+
+It's a known problem that Kotlin generates a lot of code under the hood, and that standard coverage techniques are not equipped to ignore these paths. This library is a brute force solution that forces the traversal of those paths at test-time, leading to 100% coverage numbers for generated logic.
 
 ### Get
 ```gradle
