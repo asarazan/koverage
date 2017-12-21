@@ -18,7 +18,7 @@ group = 'net.sarazan'
 
 
 def bintrayUser = findProperty("bintray.user")
-def bintrayKey = findProperty("bintray.apiKey")
+def bintrayKey = findProperty("bintray.apikey")
 if (bintrayUser != null && bintrayKey != null) {
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
