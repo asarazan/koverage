@@ -21,4 +21,15 @@ class KoverageTests {
     fun testEnum() {
         Koverage.cover<SomeEnum>()
     }
+
+    @Test
+    fun testCompanion() {
+        Koverage.cover<WithCompanion>()
+        Koverage.cover<WithCompanion.Companion>()
+    }
+
+    @Test
+    fun testSingleton() {
+        Koverage.cover<Singleton>()
+    }
 }

@@ -6,10 +6,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.*
 
 /**
  * Created by Aaron Sarazan on 12/15/17
@@ -17,12 +14,11 @@ import kotlin.reflect.full.primaryConstructor
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> KClass<T>.coverableInstances(): List<T> {
-    return if (objectInstance != null) {
-        listOf(objectInstance!!)
-    } else if (java.isEnum) {
-        java.enumConstants.toList()
-    } else {
-        listOf(allocateUnsafe())
+    return when {
+        isCompanion -> listOf(getInstanceOfCompanionClass())
+        objectInstance != null -> listOf(objectInstance!!)
+        java.isEnum -> java.enumConstants.toList()
+        else -> listOf(allocateUnsafe())
     }
 }
 
@@ -118,3 +114,10 @@ val <T : Any> KClass<T>.coverableProperties: List<KProperty1<T, *>>
             memberProperties
         }.toList()
     }
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Any> KClass<T>.getInstanceOfCompanionClass(): T {
+    assert(isCompanion)
+    val baseClass = Class.forName(qualifiedName!!.split('.').dropLast(1).joinToString(".")).kotlin
+    return baseClass.companionObjectInstance as T
+}

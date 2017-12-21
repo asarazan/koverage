@@ -1,9 +1,9 @@
 package net.sarazan.koverage.testers
 
 import net.sarazan.koverage.Coverable
+import net.sarazan.koverage.util.coverableInstances
 import net.sarazan.koverage.util.coverableProperties
 import net.sarazan.koverage.util.default
-import net.sarazan.koverage.util.coverableInstances
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -26,7 +26,9 @@ object PropertyTester : Coverable {
                     if (prop is KMutableProperty1) {
                         (prop as KMutableProperty1<T, Any>).set(obj, it.type.kotlin.default())
                     } else {
-                        it.set(obj, it.type.kotlin.default())
+                        try {
+                            it.set(obj, it.type.kotlin.default())
+                        } catch (_: IllegalAccessException) {}
                     }
                     prop.get(obj)
                 }
