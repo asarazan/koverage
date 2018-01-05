@@ -6,7 +6,7 @@ It's a known problem that Kotlin generates a lot of code under the hood, and tha
 ### Get
 ```gradle
 dependencies {
-  testImplementation 'net.sarazan:koverage:1.1'
+  testImplementation 'net.sarazan:koverage:1.1.1'
 }
 ```
 
