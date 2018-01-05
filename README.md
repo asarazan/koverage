@@ -23,4 +23,5 @@ We've tried to hit the most broad use cases, and still fail gracefully if things
 
 #### TODO
 * This is not terribly well-tested. There are probably some use cases where it falls over.
+* I suspect it does not do the right thing on field-backed properties with non-default getters/setters.
 * It would be cool to create a gradle plugin that automatically runs `Koverage.cover` on all detected data classes. PRs welcome!
