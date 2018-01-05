@@ -10,6 +10,7 @@ class KoverageTests {
     @Test
     fun testProperties() {
         Koverage.cover<BasicProperties>()
+        Koverage.cover<PrivateSetters>()
     }
 
     @Test

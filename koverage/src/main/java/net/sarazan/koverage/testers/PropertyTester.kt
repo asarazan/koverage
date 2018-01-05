@@ -6,7 +6,8 @@ import net.sarazan.koverage.util.coverableProperties
 import net.sarazan.koverage.util.default
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
-import kotlin.reflect.KProperty1
+import kotlin.reflect.KProperty
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 
 /**
@@ -21,12 +22,13 @@ object PropertyTester : Coverable {
             obj ->
             klass.coverableProperties.forEach {
                 prop ->
-                (prop as KProperty1<T, Any>).javaField?.let {
-                    it.isAccessible = true
+                if (prop.isEligible) {
+                    prop.isAccessible = true
                     if (prop is KMutableProperty1) {
-                        (prop as KMutableProperty1<T, Any>).set(obj, it.type.kotlin.default())
+                        (prop as KMutableProperty1<T, Any>).set(obj, (prop.returnType.classifier as KClass<*>).default())
                     } else {
                         try {
+                            val it = prop.javaField!!
                             it.set(obj, it.type.kotlin.default())
                         } catch (_: IllegalAccessException) {}
                     }
@@ -35,4 +37,9 @@ object PropertyTester : Coverable {
             }
         }
     }
+
+    private val KProperty<*>.isEligible: Boolean
+        get() {
+            return javaField != null
+        }
 }

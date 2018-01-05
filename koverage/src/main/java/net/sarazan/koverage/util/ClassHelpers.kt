@@ -88,11 +88,6 @@ val KFunction<*>.simpleName: String
 val <T : Any> KClass<T>.copyFunction: KFunction<T>
     get() = (memberFunctions.find { it.simpleName == "copy" } as KFunction<T>)
 
-@Suppress("UNCHECKED_CAST")
-fun <R : Any> KClass<*>.declaredMemberProperty(name: String): KProperty1<*, R> {
-    return (declaredMemberProperties.find { it.name == name } as KProperty1<*, R>)
-}
-
 fun <T : Any> T.dataClassCopy(): T {
     val copy = javaClass.kotlin.copyFunction
     return copy.callBy(mapOf(copy.parameters.first() to this))
