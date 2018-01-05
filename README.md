@@ -1,18 +1,25 @@
 # koverage [![Build Status](https://travis-ci.org/asarazan/koverage.svg?branch=master)](https://travis-ci.org/asarazan/koverage)
-100% code coverage for Kotlin data classes
+100% code coverage for Kotlin data classes and other generated kotlin code.
+
+It's a known problem that Kotlin generates a lot of code under the hood, and that standard coverage techniques are not equipped to ignore these paths. This library is a brute force solution that forces the traversal of those paths at test-time, leading to 100% coverage numbers for generated logic.
 
 ### Get
 ```gradle
 dependencies {
-  testImplementation 'net.sarazan:koverage:1.0'
+  testImplementation 'net.sarazan:koverage:1.1'
 }
 ```
 
 ### Use
-Currently Koverage's only feature is data classes. If there are other areas of Kotlin that you find problematic, file an issue and I'll see what I can do.
+For every supported Kotlin class in your project, create a unit test that calls `Koverage.cover<YOUR_CLASS_HERE>()`. See the app module for an example.
 
-#### Data Classes
-For every data class in your project, create a unit test that calls `Koverage.cover<YOUR_CLASS_HERE>()`. See the app module for an example.
+### Supported Use Cases
+We've tried to hit the most broad use cases, and still fail gracefully if things don't work out. We've confirmed basic compatibility for generated code in the following cases:
+* Field-backed properties
+* Enums
+* Data Classes
+* Companion Objects
+* Singleton Objects
 
 #### TODO
 * This is not terribly well-tested. There are probably some use cases where it falls over.
