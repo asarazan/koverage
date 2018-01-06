@@ -82,7 +82,7 @@ if (bintrayUser != null && bintrayKey != null) {
         publications = ['mavenJava']
 
         dryRun = false
-        publish = true
+        publish = false
         override = false
 
         pkg {
