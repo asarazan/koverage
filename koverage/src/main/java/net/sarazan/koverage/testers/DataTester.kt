@@ -1,6 +1,6 @@
 package net.sarazan.koverage.testers
 
-import net.sarazan.koverage.*
+import net.sarazan.koverage.Coverable
 import net.sarazan.koverage.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberFunctions

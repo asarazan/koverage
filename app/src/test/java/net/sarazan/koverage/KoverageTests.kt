@@ -33,4 +33,10 @@ class KoverageTests {
     fun testSingleton() {
         Koverage.cover<Singleton>()
     }
+
+    @Test
+    fun testConstructors() {
+        Koverage.cover<WeirdConstructors>()
+        Koverage.cover<DataWeirdConstructors>()
+    }
 }

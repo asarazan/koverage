@@ -57,6 +57,20 @@ fun <T : Any> KClass<T>.default(): T {
         Float::class -> 0.toFloat()
         Long::class -> 0.toLong()
         Short::class -> 0.toShort()
+        Class::class -> Any::class.java
+
+        // This is my best-effort attempt to support arrays. Can only do primitives and strings
+        DoubleArray::class -> doubleArrayOf()
+        FloatArray::class -> floatArrayOf()
+        LongArray::class -> longArrayOf()
+        IntArray::class -> intArrayOf()
+        CharArray::class -> charArrayOf()
+        ShortArray::class -> shortArrayOf()
+        ByteArray::class -> byteArrayOf()
+        BooleanArray::class -> booleanArrayOf()
+        Array<String>::class -> arrayOf<String>()
+
+        // Everything else gets the Mockito treatment
         else -> Mockito.mock(cls)
     } as T
 }
@@ -74,6 +88,16 @@ fun <T : Any> T.different(): T {
         is Float -> this + 1
         is Long -> this + 1
         is Short -> this + 1
+        is DoubleArray -> this + 1.0
+        is FloatArray -> this + 1f
+        is LongArray -> this + 1L
+        is IntArray -> this + 1
+        is CharArray -> this + 'a'
+        is ShortArray -> this + 1
+        is ByteArray -> this + 1
+        is BooleanArray -> this + true
+
+        // is Class<*> -> I have no idea how to handle this.
         else -> Mockito.mock(self.javaClass)
     } as T
 }
